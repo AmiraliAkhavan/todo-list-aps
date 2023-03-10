@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./App.css";
 
 function App() {
@@ -12,10 +11,10 @@ function App() {
   const addItem = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5500/api/item", {
+      const result = await axios.post("http://localhost:5500/api/item", {
         item: listItem,
       });
-      setListItems((prev) => [...prev, res.data]);
+      setListItems((prev) => [...prev, result.data]);
       setlistItem("");
     } catch (err) {
       console.log(err);
@@ -25,8 +24,8 @@ function App() {
   useEffect(() => {
     const getItemsList = async () => {
       try {
-        const res = await axios.get("http://localhost:5500/api/items");
-        setListItems(res.data);
+        const result = await axios.get("http://localhost:5500/api/items");
+        setListItems(result.data);
       } catch (err) {
         console.log(err);
       }
@@ -36,7 +35,7 @@ function App() {
 
   const deleteItem = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:5500/api/item/${id}`);
+      const result = await axios.delete(`http://localhost:5500/api/item/${id}`);
       const newListItems = listItems.filter((item) => item._id !== id);
       setListItems(newListItems);
     } catch (err) {
@@ -47,7 +46,7 @@ function App() {
   const updateItem = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(
+      const result = await axios.put(
         `http://localhost:5500/api/item/${Updaying}`,
         { item: updateItemText }
       );
@@ -111,7 +110,7 @@ function App() {
                     setUpdating(item._id);
                   }}
                 >
-                  <i className="fas fa-check update-btn"></i>
+                  <i className="fas fa-check update-btn "></i>
                 </button>
                 <button
                   className="delete-item"

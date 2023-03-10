@@ -1,10 +1,13 @@
+html {
+  background-color: #352f5b;
+}
+
 .App {
   font-family: sans-serif;
   text-align: center;
-  background-color: #352f5b;
   color: #fff;
-  height: 100vh;
 }
+
 
 form.form {
   display: flex;
@@ -44,7 +47,7 @@ form.form button[type="submit"] {
   padding: 10px;
   width: 60%;
   border-radius: 5px;
-  background-color: #24d7ff;
+  background-color: #1db0d1;
 }
 
 .item-content {
@@ -63,9 +66,47 @@ form.form button[type="submit"] {
 }
 
 .update-btn {
-  color: #fff;
+  color: #d9ff00;
 }
 
 .delete-btn {
-  color: #fff;
+  color: #fe0000;
+}
+
+.update-form {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.update-new-input {
+  width: 60%;
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+.update-new-btn {
+  width: 50%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #85ff63;
+  color: #000000;
+}
+
+.star-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.todo-text.bold {
+  font-weight: bold;
 }
