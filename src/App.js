@@ -1,108 +1,130 @@
-import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./App.css";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
-  const [todos, setTodos] = useState([
-    { text: "Practice coding", id: 1 },
-    { text: "Doing some exercise", id: 2 },
-    { text: "Go shopping", id: 3 },
-  ]);
-  const [filteredTodos, setFilteredTodos] = useState(todos);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [editText, setEditText] = useState("");
-  const [editId, setEditId] = useState(null);
+  const [listItem, setlistItem] = useState("");
+  const [listItems, setListItems] = useState([]);
+  const [Updaying, setUpdating] = useState("");
+  const [updateItemText, setUpdateItemText] = useState("");
 
-  const handleEditTodo = (id) => {
-    const todo = todos.find((todo) => todo.id === id);
-    setEditText(todo.text);
-    setEditId(id);
-  };
-
-  useEffect(() => {
-    const filtered = todos.filter((todo) =>
-      todo.text.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredTodos(filtered);
-  }, [todos, searchTerm]);
-
-  const handleAddTodo = (e) => {
+  const addItem = async (e) => {
     e.preventDefault();
-    if (editId) {
-      setTodos(
-        todos.map((todo) =>
-          todo.id === editId ? { ...todo, text: editText } : todo
-        )
-      );
-      setEditId(null);
-      setEditText("");
-    } else {
-      const newTodo = { text: e.target.add.value, id: Date.now() };
-      setTodos([...todos, newTodo]);
-      e.target.reset();
-      setEditText("");
+    try {
+      const res = await axios.post("http://localhost:5500/api/item", {
+        item: listItem,
+      });
+      setListItems((prev) => [...prev, res.data]);
+      setlistItem("");
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  const handleDeleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  useEffect(() => {
+    const getItemsList = async () => {
+      try {
+        const res = await axios.get("http://localhost:5500/api/items");
+        setListItems(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getItemsList();
+  }, []);
+
+  const deleteItem = async (id) => {
+    try {
+      const res = await axios.delete(`http://localhost:5500/api/item/${id}`);
+      const newListItems = listItems.filter((item) => item._id !== id);
+      setListItems(newListItems);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+  const updateItem = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put(
+        `http://localhost:5500/api/item/${Updaying}`,
+        { item: updateItemText }
+      );
+      const updatedItemIndex = listItems.findIndex(
+        (item) => item._id === Updaying
+      );
+      const updatedItem = (listItems[updatedItemIndex].item = updateItemText);
+      setUpdateItemText("");
+      setUpdating("");
+    } catch (err) {
+      console.log(err);
+    }
   };
+  const renderUpdateForm = () => (
+    <form
+      className="update-form"
+      onSubmit={(e) => {
+        updateItem(e);
+      }}
+    >
+      <input
+        className="update-new-input"
+        type="text"
+        placeholder="New Item"
+        onChange={(e) => {
+          setUpdateItemText(e.target.value);
+        }}
+        value={updateItemText}
+      />
+      <button className="update-new-btn" type="submit">
+        Update
+      </button>
+    </form>
+  );
 
   return (
-    <div className="container">
-      <header className="text-center text-light my-4">
-        <h1 className="mb-4">Todo List</h1>
-        <form className="search">
-          <input
-            className="form-control m-auto"
-            type="text"
-            name="search"
-            placeholder="Search Todos"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </form>
-      </header>
-
-      <ul className="list-group ul mx-auto text-light">
-        {filteredTodos.map((todo) => (
-          <li
-            key={todo.id}
-            className="list-group-item d-flex justify-content-between align-items-center"
-          >
-            <span>{todo.text}</span>
-            <div>
-              <FontAwesomeIcon
-                icon={faTrashAlt}
-                className="delete"
-                onClick={() => handleDeleteTodo(todo.id)}
-              />
-              <FontAwesomeIcon
-                icon={faEdit}
-                className="edit"
-                onClick={() => handleEditTodo(todo.id)}
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
-
-      <form className="add text-center my-4" onSubmit={handleAddTodo}>
-        <label className="text-light">Add a new todo / Edit</label>
+    <div className="App">
+      <h1>Todo List</h1>
+      <form className="form" onSubmit={(e) => addItem(e)}>
         <input
-          className="form-control m-auto"
           type="text"
-          name="add"
-          value={editText}
-          onChange={(e) => setEditText(e.target.value)}
+          placeholder="Add Todo Item"
+          onChange={(e) => {
+            setlistItem(e.target.value);
+          }}
+          value={listItem}
         />
+        <button type="submit">Add</button>
       </form>
+      <div className="todo-listItems">
+        {listItems.map((item) => (
+          <div className="todo-item">
+            {Updaying === item._id ? (
+              renderUpdateForm()
+            ) : (
+              <>
+                <p className="item-content">{item.item}</p>
+                <button
+                  className="update-item"
+                  onClick={() => {
+                    setUpdating(item._id);
+                  }}
+                >
+                  Update
+                </button>
+                <button
+                  className="delete-item"
+                  onClick={() => {
+                    deleteItem(item._id);
+                  }}
+                >
+                  Delete
+                </button>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5500;
 
-// app.use(cors());
+app.use(cors());
 
 const TodoItemRoute = require("./routes/routeItems");
 
