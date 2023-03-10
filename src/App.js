@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./App.css";
 
 function App() {
@@ -110,7 +111,7 @@ function App() {
                     setUpdating(item._id);
                   }}
                 >
-                  Update
+                  <i className="fas fa-check update-btn"></i>
                 </button>
                 <button
                   className="delete-item"
@@ -118,7 +119,7 @@ function App() {
                     deleteItem(item._id);
                   }}
                 >
-                  Delete
+                  <i className="fas fa-trash-alt delete-btn"></i>
                 </button>
               </>
             )}
