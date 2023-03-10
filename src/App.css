@@ -100,13 +100,3 @@ form.form button[type="submit"] {
   background-color: #85ff63;
   color: #000000;
 }
-
-.star-button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.todo-text.bold {
-  font-weight: bold;
-}
